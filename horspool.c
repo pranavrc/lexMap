@@ -2,6 +2,22 @@
 #include <limits.h>
 #include <sys/types.h>
 #include <stdio.h> 
+
+char *replace_string(char *str, char *orig, char *rep)
+{
+  static char buffer[4096];
+  char *p;
+
+  if ( !(p = strstr(str, orig)) )  // Is 'orig' even in 'str'?
+    return str;
+
+  strncpy(buffer, str, p - str); // Copy characters from 'str' start to 'orig' str
+  buffer[p - str] = '\0';
+
+  sprintf(buffer + (p - str), "%s%s", rep, p + strlen(orig));
+
+  return buffer;
+}
  
 /* Returns a pointer to the first occurrence of "needle"
  * within "haystack", or NULL if not found. Works like
@@ -73,8 +89,15 @@ int main(void)
 	const unsigned char *search = "is";
 
         const unsigned char *example;
+	const unsigned char *examplefoo;
+	
+	examplefoo = boyermoore_horspool_memmem(string, strlen(string), search, strlen(search));
+
+	while (examplefoo != NULL) {
+		examplefoo = boyermoore_horspool_memmem(examplefoo, strlen(examplefoo), search, strlen(search));
+		printf("%s\n", examplefoo);
+	}
 		
-	example = boyermoore_horspool_memmem(string, strlen(string), search, strlen(search));
 
 	printf("%s", example);
 

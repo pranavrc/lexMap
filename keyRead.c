@@ -71,6 +71,44 @@ void keySplit(char *oKey)
 	printf("%s\n%s\n", oKey, eKey);
 }
 
+char *replace_string(char *str, char *orig, char *rep)
+{
+  	static char buffer[4096];
+  	char *p;
+
+  	if ( !(p = strstr(str, orig)) )  // Is 'orig' even in 'str'?
+    		return NULL;
+
+  	strncpy(buffer, str, p - str); // Copy characters from 'str' start to 'orig' str
+  	buffer[p - str] = '\0';
+
+  	sprintf(buffer + (p - str), "%s%s", rep, p + strlen(orig));
+
+  	return buffer;
+}
+
+char *targetFile_read(char *targetFile)
+{
+	char *fileContent;
+	long fileSize;
+
+	FILE *fptr;
+	fptr = fopen(targetFile, "r");
+
+	if (!fptr) terminate("Target file not found.");
+	
+	fseek(fptr, 0L, SEEK_END);
+	fileSize = ftell(fptr);
+	fseek(fptr, 0L, SEEK_SET);
+
+	fileContent = malloc(fileSize * sizeof(char));
+
+	fread(fileContent, 1, fileSize, fptr);
+	fclose(fptr);
+
+	return fileContent;
+}
+
 int main(int argc, char *argv[])
 {
 	int i;
@@ -82,5 +120,8 @@ int main(int argc, char *argv[])
 		free(array[i]);
 	}
 	free(array);
+
+	char *t = targetFile_read("Abc.txt");
+	printf("%s", t);
 	return 0;
 }
