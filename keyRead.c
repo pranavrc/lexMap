@@ -62,13 +62,13 @@ char **keyFile_parse(char *keyFile, int lineCount)
 	return contentArray;
 }
 
-void keySplit(char *oKey)
+char *keySplit(char *oKey)
 {
 	char *eKey;
 
 	strtok_r(oKey, ":", &eKey);
 
-	printf("%s\n%s\n", oKey, eKey);
+	return oKey, eKey;
 }
 
 char *replace_string(char *str, char *orig, char *rep)
