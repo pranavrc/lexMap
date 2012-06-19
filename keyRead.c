@@ -6,6 +6,11 @@
 
 #define BUFSIZE 1024
 
+typedef struct {
+	char *keyString;
+	char *valueString;
+} keyPairs;
+
 void terminate(const char *message)
 {
 	if (errno) {
@@ -32,7 +37,7 @@ int countLines(char *keyFile)
 			lineCount++;
 	} while (charStream != EOF);
 	fclose(fptr);
-	
+
 	return lineCount;
 }
 
@@ -62,29 +67,45 @@ char **keyFile_parse(char *keyFile, int lineCount)
 	return contentArray;
 }
 
-char *keySplit(char *oKey)
+keyPairs keySplit(char *oKey)
 {
-	char *eKey;
+	keyPairs ret;
 
-	strtok_r(oKey, ":", &eKey);
+	ret.keyString = oKey;
 
-	return oKey, eKey;
+	strtok_r(oKey, ":", &ret.valueString);
+
+	return ret;
 }
 
-char *replace_string(char *str, char *orig, char *rep)
+char *replace_string(const char *str, const char *old, const char *new)
 {
-  	static char buffer[4096];
-  	char *p;
+	char *ret;
+	int i, count = 0;
+	size_t newlen = strlen(new);
+	size_t oldlen = strlen(old);
 
-  	if ( !(p = strstr(str, orig)) )  // Is 'orig' even in 'str'?
-    		return NULL;
+	for (i = 0; str[i] != '\0'; i++) {
+		if (strstr(&str[i], old) == &str[i]) {
+			count++;
+			i += oldlen - 1;
+		}
+	}
 
-  	strncpy(buffer, str, p - str); // Copy characters from 'str' start to 'orig' str
-  	buffer[p - str] = '\0';
+	ret = malloc(i + count * (newlen - oldlen));
+	if (ret == NULL) exit(EXIT_FAILURE);
 
-  	sprintf(buffer + (p - str), "%s%s", rep, p + strlen(orig));
+	i = 0;
+	while (*str) {
+		if (strstr(str, old) == str) {
+			strcpy(&ret[i], new);
+			i += newlen;
+			str += oldlen;
+		} else ret[i++] = *str++;
+	}
+	ret[i] = '\0';
 
-  	return buffer;
+	return ret;
 }
 
 char *targetFile_read(char *targetFile)
@@ -96,7 +117,7 @@ char *targetFile_read(char *targetFile)
 	fptr = fopen(targetFile, "r");
 
 	if (!fptr) terminate("Target file not found.");
-	
+
 	fseek(fptr, 0L, SEEK_END);
 	fileSize = ftell(fptr);
 	fseek(fptr, 0L, SEEK_SET);
@@ -111,17 +132,23 @@ char *targetFile_read(char *targetFile)
 
 int main(int argc, char *argv[])
 {
+	char *t = targetFile_read("target.txt");
+	printf("Target file contents: \n%s\n", t);
 	int i;
-	int n = countLines("Foo.txt");
-	char **array = keyFile_parse("Foo.txt", n);
+	int n = countLines("key.txt");
+	keyPairs foo[n];
+	char **array = keyFile_parse("key.txt", n);
 	for (i = 0; i < n; i++) {
-		printf("%s\n", array[i]);
-		keySplit(array[i]);
+		foo[i] = keySplit(array[i]);
+		printf("\nStrings:\n%s\n%s\n", foo[i].keyString, foo[i].valueString);
+		printf("Original: %s", t);
+		printf("Strings again: %s\t%s\n", foo[i].keyString, foo[i].valueString);
+		t = replace_string(t, foo[i].keyString, foo[i].valueString);
+		printf("Replaced: %s\n", t);
 		free(array[i]);
 	}
 	free(array);
+	free(t);
 
-	char *t = targetFile_read("Abc.txt");
-	printf("%s", t);
 	return 0;
 }
