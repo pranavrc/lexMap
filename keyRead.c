@@ -140,11 +140,8 @@ int main(int argc, char *argv[])
 	char **array = keyFile_parse("key.txt", n);
 	for (i = 0; i < n; i++) {
 		foo[i] = keySplit(array[i]);
-		printf("\nStrings:\n%s\n%s\n", foo[i].keyString, foo[i].valueString);
-		printf("Original: %s", t);
-		printf("Strings again: %s\t%s\n", foo[i].keyString, foo[i].valueString);
 		t = replace_string(t, foo[i].keyString, foo[i].valueString);
-		printf("Replaced: %s\n", t);
+		printf("Replaced:\n%s\n", t);
 		free(array[i]);
 	}
 	free(array);
