@@ -130,14 +130,14 @@ char *targetFile_read(char *targetFile)
 	return fileContent;
 }
 
-int main(int argc, char *argv[])
+void lex(char *targetFile, char *keyFile)
 {
-	char *t = targetFile_read("target.txt");
+	char *t = targetFile_read(targetFile);
 	printf("Target file contents: \n%s\n", t);
 	int i;
-	int n = countLines("key.txt");
+	int n = countLines(keyFile);
 	keyPairs foo[n];
-	char **array = keyFile_parse("key.txt", n);
+	char **array = keyFile_parse(keyFile, n);
 	for (i = 0; i < n; i++) {
 		foo[i] = keySplit(array[i]);
 		t = replace_string(t, foo[i].keyString, foo[i].valueString);
@@ -146,6 +146,11 @@ int main(int argc, char *argv[])
 	}
 	free(array);
 	free(t);
+}
+
+int main(int argc, char *argv[])
+{
+	lex("target.txt", "key.txt");
 
 	return 0;
 }
