@@ -1,4 +1,3 @@
-foo:bar
-foo1:bar1
-foo2:bar2
-foo3:bar3
+c'est:that's
+tout comme:just like
+votre opinion:your opinion
