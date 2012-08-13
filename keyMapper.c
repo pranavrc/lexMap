@@ -130,10 +130,25 @@ char *targetFile_read(char *targetFile)
 	return fileContent;
 }
 
+void *targetFile_write(char *targetFile, char *str)
+{
+	char *fileContent;
+	long fileSize;
+
+	FILE *fptr;
+	fptr = fopen(targetFile, "w");
+	
+	if (!fptr) terminate("Target file not found.");
+	
+	fwrite(str, strlen(str), 1, fptr);
+	fclose(fptr);	
+}
+
+
 void lex(char *targetFile, char *keyFile)
 {
 	char *t = targetFile_read(targetFile);
-	printf("Target file contents: \n%s\n", t);
+	//printf("Target file contents: \n%s\n", t);
 	int i;
 	int n = countLines(keyFile);
 	keyPairs foo[n];
@@ -141,9 +156,12 @@ void lex(char *targetFile, char *keyFile)
 	for (i = 0; i < n; i++) {
 		foo[i] = keySplit(array[i]);
 		t = replace_string(t, foo[i].keyString, foo[i].valueString);
-		printf("Replaced:\n%s\n", t);
+		//printf("Replaced:\n%s\n", t);
 		free(array[i]);
 	}
+
+	targetFile_write("mapped.txt", t);
+
 	free(array);
 	free(t);
 }
