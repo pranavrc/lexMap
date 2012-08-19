@@ -56,13 +56,13 @@ char **keyFile_parse(char *keyFile, int lineCount)
 	return contentArray;
 }
 
-keyPairs keySplit(char *oKey)
+keyPairs keySplit(char *oKey, char *deLim)
 {
 	keyPairs ret;
 
 	ret.keyString = oKey;
 
-	strtok_r(oKey, ":", &ret.valueString);
+	strtok_r(oKey, deLim, &ret.valueString);
 
 	return ret;
 }
@@ -143,7 +143,7 @@ void lex(char *targetFile, char *keyFile, char *mapped)
 	keyPairs foo[n];
 	char **array = keyFile_parse(keyFile, n);
 	for (i = 0; i < n; i++) {
-		foo[i] = keySplit(array[i]);
+		foo[i] = keySplit(array[i], ":");
 		t = realloc(t, sizeof(char *));
 		t = replace_string(t, foo[i].keyString, foo[i].valueString);
 		//printf("Replaced:\n%s\n", t);

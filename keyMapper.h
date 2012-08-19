@@ -17,7 +17,7 @@ typedef struct {
 void terminate(const char *message);
 int countLines(char *keyFile);
 char **keyFile_parse(char *keyFile, int lineCount);
-keyPairs keySplit(char *oKey);
+keyPairs keySplit(char *oKey, char *deLim);
 char *replace_string(const char *str, const char *old, const char *new);
 char *targetFile_read(char *targetFile);
 void *targetFile_write(char *targetFile, char *str);
