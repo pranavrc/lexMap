@@ -1,15 +1,4 @@
-#include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-
-#define BUFSIZE 1024
-
-typedef struct {
-	char *keyString;
-	char *valueString;
-} keyPairs;
+#include "keyMapper.h"
 
 void terminate(const char *message)
 {
