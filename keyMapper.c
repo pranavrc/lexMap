@@ -119,11 +119,8 @@ char *targetFile_read(char *targetFile)
 	return fileContent;
 }
 
-void *targetFile_write(char *targetFile, char *str)
+void targetFile_write(char *targetFile, char *str)
 {
-	char *fileContent;
-	long fileSize;
-
 	FILE *fptr;
 	fptr = fopen(targetFile, "w");
 	
