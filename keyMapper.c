@@ -81,7 +81,7 @@ char *replace_string(const char *str, const char *old, const char *new)
 		}
 	}
 
-	ret = malloc(i + count * (newlen - oldlen));
+	ret = malloc((i + count * (newlen - oldlen) + 1) * sizeof(char));
 	if (ret == NULL) exit(EXIT_FAILURE);
 
 	i = 0;
