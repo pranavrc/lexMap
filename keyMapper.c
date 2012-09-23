@@ -42,7 +42,7 @@ char **keyFile_parse(char *keyFile, int lineCount)
 	char **contentArray;
 	int lineTrans = 0;
 
-	contentArray = malloc(lineCount * sizeof(char*));
+	contentArray = malloc((lineCount + 1) * sizeof(char*));
 
 	while (fgets(lineBuffer, sizeof(lineBuffer), fptr)) {
 		lineTrans++;
@@ -111,7 +111,7 @@ char *targetFile_read(char *targetFile)
 	fileSize = ftell(fptr);
 	fseek(fptr, 0L, SEEK_SET);
 
-	fileContent = malloc(fileSize * sizeof(char));
+	fileContent = malloc((fileSize + 1) * sizeof(char));
 
 	fread(fileContent, 1, fileSize, fptr);
 	fclose(fptr);
